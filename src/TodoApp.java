@@ -126,7 +126,7 @@ public class TodoApp {
         String result = "";
         if (args.length  < 2) {
             result = "Unable to remove: no index provided";
-        } else if (getIntFromArg(args[1]) < 1) {
+        } else if (getIntFromArg(args[1]) < 1 || getIntFromArg(args[1]) > readFile(TODO_PATH).size() - 1) {
             result = "Index not good";
         } else {
             if (!removeTask(args)) {
