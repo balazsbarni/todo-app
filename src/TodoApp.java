@@ -15,8 +15,12 @@ public class TodoApp {
         } else if (args[0].equals("-l")) {
             clearScreen();
             System.out.println(getTodoList());
+        } else if (args[0].equals("-a")) {
+            clearScreen();
+            System.out.println(checkArgs(args));
         }
-    }
+        }
+
 
 
 
@@ -59,12 +63,39 @@ public class TodoApp {
             todoListed = "No todos for today! :)";
         } else {
             for (int i = 0; i < todoList.size(); i++) {
-                todoListed += i + 1 + " - " + todoList.get(i) + "\n";
+                todoListed += "\n" + (i + 1) + " - " + todoList.get(i);
             }
         }
         return todoListed;
     }
 
+    public static String checkArgs(String[] args) {
+        String result = "";
+        if (args.length  < 2) {
+            result += "Unable to add: no task provided";
+        } else {
+            if (!addNewTask(args)) {
+                result = "Nem sikerult";
+            }
+        }
+        return result;
+    }
+
+    public static boolean addNewTask(String[] arg) {
+        return writeFile("assets/todolist.txt", arg[1]);
+    }
+
+    private static boolean writeFile(String todoPath, String newTodo) {
+            try {
+                Path filePath = Paths.get(todoPath);
+                List<String> lines = Files.readAllLines(filePath);
+                lines.add(newTodo);
+                Files.write(filePath, lines);
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+    }
 
 
 }
