@@ -18,10 +18,9 @@ public class TodoApp {
             System.out.println(getTodoList());
         } else if (args[0].equals("-a")) {
             clearScreen();
-            System.out.println(checkArgs(args));
+            System.out.println(checkTaskArgs(args));
         } else if (args[0].equals("-r")) {
-            int taskNumber = getIntFromArg(args[1]);
-            removeTask(taskNumber);
+            System.out.println(checkRemoveArgs(args));
 
         }
     }
@@ -44,11 +43,11 @@ public class TodoApp {
     }
 
     public static String getTodoList() {
-        List<String> readLines = readfile(TODO_PATH);
+        List<String> readLines = readFile(TODO_PATH);
         return checkTodo(readLines);
     }
 
-    public static List<String> readfile(String todoPath) {
+    public static List<String> readFile(String todoPath) {
         List<String> lines = new ArrayList<>();
         try {
             Path filePath = Paths.get(todoPath);
@@ -72,7 +71,7 @@ public class TodoApp {
         return todoListed;
     }
 
-    public static String checkArgs(String[] args) {
+    public static String checkTaskArgs(String[] args) {
         String result = "";
         if (args.length  < 2) {
             result += "Unable to add: no task provided";
@@ -89,7 +88,7 @@ public class TodoApp {
     }
 
     public static boolean writeFileNew(String todoPath, String newTodo) {
-        List<String> lines = readfile(TODO_PATH);
+        List<String> lines = readFile(TODO_PATH);
         lines.add(newTodo);
         return writeFileContent(todoPath, lines);
     }
@@ -104,10 +103,11 @@ public class TodoApp {
         }
     }
 
-    public static void removeTask(int taskNumber) {
-        List<String> lines = readfile(TODO_PATH);
+    public static boolean removeTask(String[] args) {
+        int taskNumber = getIntFromArg(args[1]);
+        List<String> lines = readFile(TODO_PATH);
         lines.remove(taskNumber - 1);
-        writeFileContent(TODO_PATH, lines);
+        return writeFileContent(TODO_PATH, lines);
     }
 
 
@@ -120,5 +120,19 @@ public class TodoApp {
         catch (NumberFormatException nfe) {
             return num;
         }
+    }
+
+    public static String checkRemoveArgs(String[] args) {
+        String result = "";
+        if (args.length  < 2) {
+            result = "Unable to remove: no index provided";
+        } else if (getIntFromArg(args[1]) < 1) {
+            result = "Index not good";
+        } else {
+            if (!removeTask(args)) {
+                result = "Unable to add: error happened";
+            }
+        }
+        return result;
     }
 }
