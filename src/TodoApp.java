@@ -21,6 +21,9 @@ public class TodoApp {
             System.out.println(checkTaskArgs(args));
         } else if (args[0].equals("-r")) {
             System.out.println(checkRemoveArgs(args));
+        } else {
+            clearScreen();
+            System.out.println(usageInformation() + "\n Unsupported argument");
 
         }
     }
