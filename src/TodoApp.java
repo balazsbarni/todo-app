@@ -124,7 +124,9 @@ public class TodoApp {
 
     public static String checkRemoveArgs(String[] args) {
         String result = "";
-        if (args.length  < 2) {
+        if (getIntFromArg(args[1]) == 0) {
+            result = "Unable to remove: index is not a number";
+        } else if (args.length  < 2) {
             result = "Unable to remove: no index provided";
         } else if (getIntFromArg(args[1]) < 1 || getIntFromArg(args[1]) > readFile(TODO_PATH).size() - 1) {
             result = "Index not good";
