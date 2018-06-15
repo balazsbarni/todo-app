@@ -7,6 +7,8 @@ import java.util.List;
 public class TodoApp {
 
     public static final String TODO_PATH = "assets/todolist.txt";
+    public static final String CHECKED = "[X]";
+    public static final String NOT_CHECKED = "[ ]";
 
     public static void main(String[] args) {
 
@@ -21,6 +23,8 @@ public class TodoApp {
             System.out.println(checkTaskArgs(args));
         } else if (args[0].equals("-r")) {
             System.out.println(checkRemoveArgs(args));
+        } else if (args[0].equals("-c")) {
+            System.out.println(checkCompleteIndex(args));
         } else {
             clearScreen();
             System.out.println(usageInformation() + "\n Unsupported argument");
@@ -92,7 +96,7 @@ public class TodoApp {
 
     public static boolean writeFileNew(String todoPath, String newTodo) {
         List<String> lines = readFile(TODO_PATH);
-        lines.add(newTodo);
+        lines.add(NOT_CHECKED + " " + newTodo);
         return writeFileContent(todoPath, lines);
     }
 
@@ -136,6 +140,33 @@ public class TodoApp {
         } else {
             if (!removeTask(args)) {
                 result = "Unable to add: error happened";
+            }
+        }
+        return result;
+    }
+
+    public static boolean completeTask(String[] args) {
+        int index = getIntFromArg(args[1]);
+        List<String> lines = readFile(TODO_PATH);
+        for (int i = 0; i < lines.size(); i++) {
+            if (i == index - 1) {
+                lines.set(i, lines.get(i).replace(NOT_CHECKED ,  CHECKED));
+            }
+        }
+        return writeFileContent(TODO_PATH, lines);
+    }
+
+    public static  String checkCompleteIndex(String[] args) {
+        String result = "";
+        if (getIntFromArg(args[1]) == 0) {
+            result = "Unable to check: index is not a number";
+        } else if (args.length  < 2) {
+            result = "Unable to check: no index provided";
+        } else if (getIntFromArg(args[1]) < 1 || getIntFromArg(args[1]) > readFile(TODO_PATH).size() - 1) {
+            result = "Index not good";
+        } else {
+            if (!completeTask(args)) {
+                result = "Unable to check: error happened";
             }
         }
         return result;
