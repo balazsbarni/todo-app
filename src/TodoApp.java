@@ -40,7 +40,7 @@ public class TodoApp {
         String todoListed = "";
         List<String> readLines = readfile("assets/todolist.txt");
         for (int i = 0; i < readLines.size(); i++) {
-            todoListed += readLines.get(i) + "\n";
+            todoListed += i + 1 + " - " + readLines.get(i) + "\n";
         }
         return todoListed;
     }
