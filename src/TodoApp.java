@@ -37,12 +37,8 @@ public class TodoApp {
     }
 
     public static String getTodoList() {
-        String todoListed = "";
         List<String> readLines = readfile("assets/todolist.txt");
-        for (int i = 0; i < readLines.size(); i++) {
-            todoListed += i + 1 + " - " + readLines.get(i) + "\n";
-        }
-        return todoListed;
+        return checkTodo(readLines);
     }
 
     public static List<String> readfile(String todoPath) {
@@ -56,6 +52,19 @@ public class TodoApp {
             return lines;
         }
     }
+
+    public static String checkTodo(List<String> todoList) {
+        String todoListed = "";
+        if (todoList.size() == 0) {
+            todoListed = "No todos for today! :)";
+        } else {
+            for (int i = 0; i < todoList.size(); i++) {
+                todoListed += i + 1 + " - " + todoList.get(i) + "\n";
+            }
+        }
+        return todoListed;
+    }
+
 
 
 }
