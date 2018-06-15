@@ -6,8 +6,9 @@ import java.util.List;
 
 public class TodoApp {
 
-    public static void main(String[] args) {
+    public static final String TODO_PATH = "assets/todolist.txt";
 
+    public static void main(String[] args) {
 
         if (args.length == 0){
             clearScreen();
@@ -18,10 +19,12 @@ public class TodoApp {
         } else if (args[0].equals("-a")) {
             clearScreen();
             System.out.println(checkArgs(args));
-        }
-        }
+        } else if (args[0].equals("-r")) {
+            int taskNumber = getIntFromArg(args[1]);
+            removeTask(taskNumber);
 
-
+        }
+    }
 
 
     public static String usageInformation() {
@@ -41,7 +44,7 @@ public class TodoApp {
     }
 
     public static String getTodoList() {
-        List<String> readLines = readfile("assets/todolist.txt");
+        List<String> readLines = readfile(TODO_PATH);
         return checkTodo(readLines);
     }
 
@@ -75,27 +78,47 @@ public class TodoApp {
             result += "Unable to add: no task provided";
         } else {
             if (!addNewTask(args)) {
-                result = "Nem sikerult";
+                result = "Unable to add: error happened";
             }
         }
         return result;
     }
 
     public static boolean addNewTask(String[] arg) {
-        return writeFile("assets/todolist.txt", arg[1]);
+        return writeFileNew(TODO_PATH, arg[1]);
     }
 
-    private static boolean writeFile(String todoPath, String newTodo) {
-            try {
-                Path filePath = Paths.get(todoPath);
-                List<String> lines = Files.readAllLines(filePath);
-                lines.add(newTodo);
-                Files.write(filePath, lines);
-                return true;
-            } catch (Exception e) {
-                return false;
-            }
+    public static boolean writeFileNew(String todoPath, String newTodo) {
+        List<String> lines = readfile(TODO_PATH);
+        lines.add(newTodo);
+        return writeFileContent(todoPath, lines);
+    }
+
+    public static boolean writeFileContent(String todoPath, List<String> content) {
+        try {
+            Path filePath = Paths.get(todoPath);
+            Files.write(filePath, content);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public static void removeTask(int taskNumber) {
+        List<String> lines = readfile(TODO_PATH);
+        lines.remove(taskNumber - 1);
+        writeFileContent(TODO_PATH, lines);
     }
 
 
+    public static int getIntFromArg(String arg) {
+        int num = 0;
+        try {
+            num = Integer.parseInt(arg);
+            return num;
+        }
+        catch (NumberFormatException nfe) {
+            return num;
+        }
+    }
 }
